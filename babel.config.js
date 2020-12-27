@@ -13,6 +13,8 @@ module.exports = {
           "@routes": "./src/routes",
           "@utils": "./src/utils",
           "@pages": "./src/pages",
+          "@models": "./src/models",
+          "@hooks": "./src/hooks",
         },
       },
     ],
