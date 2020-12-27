@@ -16,19 +16,11 @@ const ScanScreen = ({ navigation }) => {
     const isPermission = await checkLicense();
     if (isPermission) {
       const result = await startDocumentScan();
-      console.log(result);
 
       if (!result) {
         goBack();
       } else {
-        const images = result?.pages.map((item) => {
-          return {
-            id: item.pageId,
-            url: item.documentImageFileUri ?? "",
-          };
-        });
-
-        await modelsLocal.addImage(images);
+        await modelsLocal.addImage(result?.pages);
       }
     } else {
       goBack();

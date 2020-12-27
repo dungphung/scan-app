@@ -33,8 +33,8 @@ const Loading: React.FC<ILoading> = ({
 );
 
 Loading.defaultProps = {
-  width: 20,
-  height: 20,
+  width: 100,
+  height: 100,
 };
 
 const styles = StyleSheet.create({

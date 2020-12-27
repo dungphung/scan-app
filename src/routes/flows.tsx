@@ -3,8 +3,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/AntDesign";
-import { HomeScreen, LibraryScreen, ScanScreen } from "@pages/index";
 import {
+  FilterImage,
+  HomeScreen,
+  LibraryScreen,
+  ScanScreen,
+} from "@pages/index";
+import {
+  FILTER_PAGE,
   HOME_PAGE,
   HOME_TAB,
   LIBRARY_PAGE,
@@ -32,6 +38,10 @@ const LibraryStackScreen = () => {
       <LibraryStack.Screen
         name={PAGE_NAME[LIBRARY_PAGE]}
         component={LibraryScreen}
+      />
+      <LibraryStack.Screen
+        name={PAGE_NAME[FILTER_PAGE]}
+        component={FilterImage}
       />
     </LibraryStack.Navigator>
   );

@@ -8,7 +8,9 @@ interface ImageLocalType {
 }
 
 class LocalStoreImages {
-  constructor() {}
+  constructor() {
+    this.init();
+  }
 
   async init() {
     const listImage = await AsyncStorage.getItem(IMAGES_KEY);
@@ -18,24 +20,46 @@ class LocalStoreImages {
     }
   }
 
+  refresh = () => {
+    this.init();
+  };
+
   listImage: [ImageLocalType] = [];
 
   addImage = async (images: [ImageLocalType]) => {
     if (images.length > 0) {
       images.forEach((item) => {
-        this.listImage.push(item);
+        this.listImage.unshift(item);
       });
       await AsyncStorage.setItem(IMAGES_KEY, JSON.stringify(this.listImage));
     }
   };
 
-  removeImag = async () => {};
+  removeImage = async (id) => {
+    const images = this.listImage.filter((item) => item.id !== id);
+    this.listImage = [...images];
+    await AsyncStorage.setItem(IMAGES_KEY, JSON.stringify(this.listImage));
+  };
 
-  getListImage = async () => {
-    if (!this.listImage.length) {
-      await this.init();
-    }
+  getListImage = () => {
     return this.listImage;
+  };
+
+  getImage = (pageId) => {
+    const image = this.listImage.find((item) => item.pageId === pageId);
+
+    return image;
+  };
+
+  updateImage = async (image) => {
+    this.listImage = this.listImage.map((item) => {
+      if (item.pageId === image.pageId) {
+        return image;
+      }
+      return item;
+    });
+
+    await AsyncStorage.setItem(IMAGES_KEY, JSON.stringify(this.listImage));
   };
 }
 

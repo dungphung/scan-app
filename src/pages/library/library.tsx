@@ -12,32 +12,42 @@ import {
 import { Divider } from "@components/index";
 
 import { LocalStoreImages } from "../../models";
+import { FILTER_PAGE, PAGE_NAME } from "routes/pages";
+import { useFocusEffect } from "@react-navigation/native";
 
 const modelsLocal = new LocalStoreImages();
 
 function LibraryScreen({ navigation }) {
   const [images, setImages] = React.useState([]);
+
   React.useEffect(() => {
     getImage();
   }, []);
 
-  const onPressItem = React.useCallback((item) => {}, []);
+  useFocusEffect(() => {
+    modelsLocal.refresh();
+  });
+
+  const onPressItem = React.useCallback((item) => {
+    console.log(item);
+    navigation.navigate(PAGE_NAME[FILTER_PAGE], {
+      id: item.pageId,
+    });
+  }, []);
 
   const getImage = React.useCallback(async () => {
-    const listImage = await modelsLocal.getListImage();
-    console.log(listImage);
-
+    const listImage = modelsLocal.getListImage();
     setImages(listImage);
   }, []);
 
   const renderItem = React.useCallback(({ item }) => {
     return (
-      <TouchableOpacity onPress={onPressItem}>
+      <TouchableOpacity onPress={() => onPressItem(item)}>
         <View style={styles.wapperItem}>
           <Image
             style={styles.image}
             resizeMode={"contain"}
-            source={{ uri: item.url }}
+            source={{ uri: item.documentImageFileUri }}
           />
         </View>
       </TouchableOpacity>
@@ -45,7 +55,7 @@ function LibraryScreen({ navigation }) {
   }, []);
 
   const keyExtractor = React.useCallback((item) => {
-    return item.id;
+    return item.pageId;
   }, []);
 
   const ItemSeparatorComponent = React.useCallback(() => {
