@@ -29,6 +29,8 @@ build/
 local.properties
 *.iml
 
+android/java_pid9678.hprof
+
 # Visual Studio Code
 #
 .vscode/
