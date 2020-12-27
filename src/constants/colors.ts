@@ -1,0 +1,11 @@
+export const blackColor = "#000000";
+export const primaryColor = "#33cc99";
+export const secondaryColor = "#cc3366";
+export const starColor = "#F8E60B";
+export const waitingColor = "#fa8c16";
+export const notverifyColor = "#f5222d";
+export const redColor = "#FF0000";
+export const placeholderColor = "#B7B6B6";
+export const lineColor = "rgba(231,230,230,0.7)";
+export const borderColor = "#e5e4e4";
+export const textColor = "#323232";

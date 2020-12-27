@@ -3,25 +3,33 @@ import { View } from "react-native";
 
 import { LIBRARY_PAGE } from "@routes/pages";
 import { checkLicense, startDocumentScan } from "@utils/initScanbotSdk";
+import { LocalStoreImages } from "../../models";
+
+const modelsLocal = new LocalStoreImages();
 
 const ScanScreen = ({ navigation }) => {
+  React.useEffect(() => {
+    configureScan();
+  }, []);
+
   const configureScan = async () => {
     const isPermission = await checkLicense();
     if (isPermission) {
       const result = await startDocumentScan();
-      console.log(result);
 
       if (!result) {
-        navigation.goBack();
+        goBack();
+      } else {
+        await modelsLocal.addImage(result?.pages);
       }
     } else {
-      navigation.goBack();
+      goBack();
     }
   };
 
-  React.useEffect(() => {
-    configureScan();
-  }, []);
+  const goBack = React.useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
 
   return <View />;
 };
