@@ -7,6 +7,7 @@ import ScanbotSDK, {
 } from "react-native-scanbot-sdk";
 
 import { DocumentDirectoryPath, ExternalDirectoryPath } from "react-native-fs";
+import { primaryColor } from "@constants/colors";
 
 const options: InitializationOptions = {
   licenseKey: LICENSE_KEY,
@@ -21,12 +22,12 @@ console.log(options);
 
 const config: DocumentScannerConfiguration = {
   polygonColor: "#00ffff",
-  bottomBarBackgroundColor: "#c8193c",
-  topBarBackgroundColor: "#c8193c",
-  cameraBackgroundColor: "#c8193c",
+  bottomBarBackgroundColor: primaryColor,
+  topBarBackgroundColor: primaryColor,
+  cameraBackgroundColor: primaryColor,
   orientationLockMode: "PORTRAIT",
   pageCounterButtonTitle: "%d Page(s)",
-  multiPageEnabled: true,
+  multiPageEnabled: false,
   ignoreBadAspectRatio: true,
   autoSnappingSensitivity: 0.85,
 };
@@ -81,8 +82,8 @@ async function startCroppingScreen(selectedImage): Promise<CroppingResult> {
   try {
     const result = await ScanbotSDK.UI.startCroppingScreen(selectedImage, {
       doneButtonTitle: "Apply",
-      topBarBackgroundColor: "#c8193c",
-      bottomBarBackgroundColor: "#c8193c",
+      topBarBackgroundColor: primaryColor,
+      bottomBarBackgroundColor: primaryColor,
     });
 
     return result;

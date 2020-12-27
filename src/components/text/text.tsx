@@ -7,13 +7,13 @@ import {
   StyleProp,
   Platform,
 } from "react-native";
-import { textColor } from "@constants/Colors";
+import { textColor } from "@constants/colors";
 
 export interface IPropsText extends TextProps {
   style?: StyleProp<TextStyle>;
   color?: string;
   isNumber?: boolean;
-  weight: "Regular" | "Medium" | "Light" | "SemiBold";
+  weight?: "Regular" | "Medium" | "Light" | "SemiBold";
 }
 
 const Text: React.FC<IPropsText> = ({
@@ -25,7 +25,7 @@ const Text: React.FC<IPropsText> = ({
   <RNText
     style={StyleSheet.flatten([
       styles.text,
-      //   { fontFamily: `Poppins-${weight}` },
+      // { fontFamily: `Quicksand-${weight}` },
       style,
       Platform.OS === "android" && {
         includeFontPadding: false,

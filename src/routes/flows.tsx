@@ -18,6 +18,11 @@ import {
   PAGE_NAME,
   SCAN_PAGE,
 } from "./pages";
+import {
+  itemBackgroundColor,
+  primaryColor,
+  whiteColor,
+} from "constants/colors";
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -26,8 +31,20 @@ const LibraryStack = createStackNavigator();
 const HomeStackScreen = () => {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name={PAGE_NAME[HOME_PAGE]} component={HomeScreen} />
-      <HomeStack.Screen name={PAGE_NAME[SCAN_PAGE]} component={ScanScreen} />
+      <HomeStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name={PAGE_NAME[HOME_PAGE]}
+        component={HomeScreen}
+      />
+      <HomeStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name={PAGE_NAME[SCAN_PAGE]}
+        component={ScanScreen}
+      />
     </HomeStack.Navigator>
   );
 };
@@ -36,10 +53,16 @@ const LibraryStackScreen = () => {
   return (
     <LibraryStack.Navigator>
       <LibraryStack.Screen
+        options={{
+          headerShown: false,
+        }}
         name={PAGE_NAME[LIBRARY_PAGE]}
         component={LibraryScreen}
       />
       <LibraryStack.Screen
+        options={{
+          headerShown: false,
+        }}
         name={PAGE_NAME[FILTER_PAGE]}
         component={FilterImage}
       />
@@ -65,8 +88,11 @@ export default function RoutesContainer() {
           },
         })}
         tabBarOptions={{
-          activeTintColor: "tomato",
-          inactiveTintColor: "gray",
+          activeTintColor: primaryColor,
+          inactiveTintColor: whiteColor,
+          style: {
+            backgroundColor: itemBackgroundColor,
+          },
         }}
       >
         <Tab.Screen name={PAGE_NAME[HOME_TAB]} component={HomeStackScreen} />

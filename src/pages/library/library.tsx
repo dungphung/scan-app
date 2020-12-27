@@ -14,6 +14,8 @@ import { Divider } from "@components/index";
 import { LocalStoreImages } from "../../models";
 import { FILTER_PAGE, PAGE_NAME } from "routes/pages";
 import { useFocusEffect } from "@react-navigation/native";
+import { HeaderLinear } from "layouts";
+import { backgroundColor, whiteColor } from "constants/colors";
 
 const modelsLocal = new LocalStoreImages();
 
@@ -64,7 +66,7 @@ function LibraryScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView />
+      <HeaderLinear title="Library" titleStyle={styles.titleStyle} />
       <FlatList
         data={images}
         renderItem={renderItem}
@@ -76,7 +78,7 @@ function LibraryScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: { flex: 1, backgroundColor: backgroundColor },
   wapperItem: {
     width: 200,
     height: 200,
@@ -89,6 +91,7 @@ const styles = StyleSheet.create({
   dividerStyle: {
     paddingVertical: 15,
   },
+  titleStyle: { fontSize: 18, color: whiteColor, fontWeight: "bold" },
 });
 
 export default LibraryScreen;

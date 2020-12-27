@@ -1,30 +1,24 @@
 import * as React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  SectionList,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 
+import { PAGE_NAME, SCAN_PAGE } from "@routes/pages";
+import { Divider, Text } from "@components/index";
 import {
-  HOME_PAGE,
-  HOME_TAB,
-  LIBRARY_PAGE,
-  PAGE_NAME,
-  SCAN_PAGE,
-} from "@routes/pages";
+  backgroundColor,
+  itemBackgroundColor,
+  whiteColor,
+} from "@constants/colors";
 
-const list = [
-  {
-    title: "DOCUMENT SCANNER",
-    data: [
-      { id: LIBRARY_PAGE, title: "Scan Document" },
-      { id: LIBRARY_PAGE, title: "Import Image & Detect Document" },
-      { id: LIBRARY_PAGE, title: "View Image Results" },
-    ],
-  },
+import { DEFAULT_PADDING, WIDTH_SCREEN } from "@constants/layouts";
+import { HeaderLinear } from "layouts";
+
+const data = [
+  { id: 1, title: "Scan Document" },
+  { id: 2, title: "Import Image & Detect Document" },
+  { id: 3, title: "View Image Results" },
 ];
+
+const ITEM_WITDH = (WIDTH_SCREEN - DEFAULT_PADDING * 4) / 2;
 
 const HomeScreen = ({ navigation }) => {
   const onPressItem = React.useCallback(
@@ -34,59 +28,69 @@ const HomeScreen = ({ navigation }) => {
     [navigation]
   );
 
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.section}>
+        <View style={styles.sectionItemContainer}>
+          <TouchableOpacity onPress={() => onPressItem(item)}>
+            <Text style={styles.sectionItem}>{item.title}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  const ItemSeparatorComponent = () => {
+    return <Divider containerStyle={{ paddingVertical: DEFAULT_PADDING }} />;
+  };
+
+  const keyExtractor = (item) => {
+    return item.id;
+  };
+
   return (
     <View style={styles.container}>
-      <SectionList
-        style={styles.list}
-        sections={list}
-        keyExtractor={(item, index) => item.title + index}
-        renderItem={({ item }) => (
-          <View style={styles.sectionItemContainer}>
-            <TouchableOpacity onPress={() => onPressItem(item)}>
-              <Text
-                style={
-                  item.customStyle
-                    ? item.customStyle.content
-                    : styles.sectionItem
-                }
-              >
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
-        )}
-      />
+      <HeaderLinear title="Document scan" titleStyle={styles.titleStyle} />
+      <View style={styles.content}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          numColumns={2}
+          contentContainerStyle={{ paddingTop: DEFAULT_PADDING * 2 }}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          keyExtractor={keyExtractor}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  list: {
-    marginTop: "1%",
-    marginLeft: "5%",
-    height: "90%",
-    width: "90%",
+  container: { flex: 1, backgroundColor: backgroundColor },
+  content: {
+    flex: 1,
   },
   sectionItem: {
-    fontSize: 17,
-    marginTop: 14,
-    marginBottom: 5,
+    fontSize: 14,
+    textAlign: "center",
+    color: whiteColor,
+    fontWeight: "bold",
+  },
+  section: {
+    width: ITEM_WITDH,
+    height: (ITEM_WITDH * 1) / 2,
+    marginHorizontal: DEFAULT_PADDING,
+    borderRadius: 20,
   },
   sectionItemContainer: {
-    borderBottomColor: "#bdbdbd",
-    borderBottomWidth: 1,
+    flex: 1,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: itemBackgroundColor,
   },
-  sectionHeader: {
-    fontSize: 13,
-    marginTop: 25,
-    marginBottom: 0,
-    fontWeight: "bold",
-    color: "#696969",
-  },
+  sectionHeader: {},
+  titleStyle: { fontSize: 18, color: whiteColor, fontWeight: "bold" },
 });
 
 export default HomeScreen;

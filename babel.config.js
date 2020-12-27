@@ -15,6 +15,7 @@ module.exports = {
           "@pages": "./src/pages",
           "@models": "./src/models",
           "@hooks": "./src/hooks",
+          "@layouts": "./src/layouts",
         },
       },
     ],
