@@ -2,8 +2,15 @@ import { Header, Text } from "components";
 import React from "react";
 import { primaryColor, secondaryColor2 } from "constants/colors";
 import LinearGradient from "react-native-linear-gradient";
+import { ViewStyle } from "react-native";
 
-export default function HeaderLinear({ titleStyle, title }) {
+export default function HeaderLinear({
+  titleStyle,
+  title,
+}: {
+  titleStyle?: ViewStyle;
+  title?: String;
+}) {
   return (
     <Header
       CustomComponent={LinearGradient}

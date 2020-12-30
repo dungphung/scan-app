@@ -4,8 +4,6 @@ import { View } from "react-native";
 import { checkLicense, startDocumentScan } from "@utils/initScanbotSdk";
 import { LocalStoreImages } from "../../models";
 
-const STATUS_CANCELED = "CANCELED";
-
 const ScanScreen = ({ navigation }) => {
   React.useEffect(() => {
     requestAnimationFrame(configureScan);
@@ -15,13 +13,10 @@ const ScanScreen = ({ navigation }) => {
     const isPermission = await checkLicense();
     if (isPermission) {
       const result = await startDocumentScan();
-
-      if (!result || (result && result?.status === STATUS_CANCELED)) {
-        goBack();
-      } else {
+      if (result) {
         await LocalStoreImages.shared.addImage(result?.pages);
       }
-    } else {
+
       goBack();
     }
   };

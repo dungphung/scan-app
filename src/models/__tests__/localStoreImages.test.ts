@@ -8,7 +8,7 @@ it("should return empty array", async () => {
 
 it("should return array with 1 elements", async () => {
   const fakeImage = {
-    pageId: 1,
+    pageId: "1",
     url: "12",
   };
 
@@ -21,7 +21,7 @@ it("should return array with 1 elements", async () => {
 
 it("should remove element in array", async () => {
   const fakeImage = {
-    pageId: 2,
+    pageId: "2",
     url: "12",
   };
 

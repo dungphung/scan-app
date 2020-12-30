@@ -1,9 +1,7 @@
 import * as React from "react";
 import {
-  Text,
   View,
   StyleSheet,
-  SafeAreaView,
   Image,
   FlatList,
   TouchableOpacity,
@@ -16,45 +14,52 @@ import { FILTER_PAGE, PAGE_NAME } from "routes/pages";
 import { useFocusEffect } from "@react-navigation/native";
 import { HeaderLinear } from "layouts";
 import { backgroundColor, whiteColor } from "constants/colors";
-
-const modelsLocal = new LocalStoreImages();
+import { DEFAULT_PADDING } from "constants/layouts";
+import { Page } from "react-native-scanbot-sdk";
 
 function LibraryScreen({ navigation }) {
-  const [images, setImages] = React.useState([]);
+  const [images, setImages] = React.useState<Page[]>([]);
 
   React.useEffect(() => {
     getImage();
   }, []);
 
   useFocusEffect(() => {
-    modelsLocal.refresh();
+    const listImage = LocalStoreImages.shared.getListImage();
+    setImages(listImage);
   });
 
-  const onPressItem = React.useCallback((item) => {
-    console.log(item);
-    navigation.navigate(PAGE_NAME[FILTER_PAGE], {
-      id: item.pageId,
-    });
-  }, []);
+  const onPressItem = React.useCallback(
+    (item) => {
+      console.log(item);
+      navigation.navigate(FILTER_PAGE, {
+        id: item.pageId,
+      });
+    },
+    [navigation]
+  );
 
   const getImage = React.useCallback(async () => {
-    const listImage = modelsLocal.getListImage();
+    const listImage = LocalStoreImages.shared.getListImage();
     setImages(listImage);
   }, []);
 
-  const renderItem = React.useCallback(({ item }) => {
-    return (
-      <TouchableOpacity onPress={() => onPressItem(item)}>
-        <View style={styles.wapperItem}>
-          <Image
-            style={styles.image}
-            resizeMode={"contain"}
-            source={{ uri: item.documentImageFileUri }}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  }, []);
+  const renderItem = React.useCallback(
+    ({ item }) => {
+      return (
+        <TouchableOpacity onPress={() => onPressItem(item)}>
+          <View style={styles.wapperItem}>
+            <Image
+              style={styles.image}
+              resizeMode="contain"
+              source={{ uri: item.documentImageFileUri }}
+            />
+          </View>
+        </TouchableOpacity>
+      );
+    },
+    [onPressItem]
+  );
 
   const keyExtractor = React.useCallback((item) => {
     return item.pageId;
@@ -68,6 +73,8 @@ function LibraryScreen({ navigation }) {
     <View style={styles.container}>
       <HeaderLinear title="Library" titleStyle={styles.titleStyle} />
       <FlatList
+        numColumns={2}
+        contentContainerStyle={styles.contentStyle}
         data={images}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
@@ -89,9 +96,12 @@ const styles = StyleSheet.create({
     height: undefined,
   },
   dividerStyle: {
-    paddingVertical: 15,
+    paddingVertical: DEFAULT_PADDING,
   },
   titleStyle: { fontSize: 18, color: whiteColor, fontWeight: "bold" },
+  contentStyle: {
+    paddingTop: DEFAULT_PADDING * 2,
+  },
 });
 
 export default LibraryScreen;

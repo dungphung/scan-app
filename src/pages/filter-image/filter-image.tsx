@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  Image,
-  Dimensions,
-} from "react-native";
+import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
 import { ActionSheetCustom } from "react-native-custom-actionsheet";
 import { Loading } from "@components/index";
 import { ScrollView } from "react-native-gesture-handler";
@@ -16,12 +9,20 @@ import {
   startCroppingScreen,
 } from "@utils/initScanbotSdk";
 import { LocalStoreImages } from "../../models";
+import { Page } from "react-native-scanbot-sdk";
+import { HeaderLinear } from "layouts";
+import {
+  backgroundColor,
+  primaryColor,
+  secondaryColor2,
+} from "constants/colors";
+import LinearGradient from "react-native-linear-gradient";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 const CANCEL_INDEX = 0;
 
-const options = [
+const nameOptions = [
   "None",
   "Color enhanced",
   "Grayscale",
@@ -37,10 +38,24 @@ const options = [
   "Low light binarization 2",
 ];
 
-const modelsLocal = new LocalStoreImages();
+const options = [
+  "NONE",
+  "COLOR_ENHANCED",
+  "GRAYSCALE",
+  "BINARIZED",
+  "COLOR_DOCUMENT",
+  "PURE_BINARIZED",
+  "BACKGROUND_CLEAN",
+  "BLACK_AND_WHITE",
+  "OTSU_BINARIZATION",
+  "DEEP_BINARIZATION",
+  "LOW_LIGHT_BINARIZATION",
+  "EDGE_HIGHLIGHT",
+  "LOW_LIGHT_BINARIZATION_2",
+];
 
 function FilterImage({ navigation, route }) {
-  const [image, setImage] = React.useState(null);
+  const [image, setImage] = React.useState<Page>(null);
 
   const actionSheetRef = React.useRef(null);
 
@@ -50,32 +65,38 @@ function FilterImage({ navigation, route }) {
 
   const getImage = React.useCallback(async () => {
     const id = route.params.id;
-    const image = await modelsLocal.getImage(id);
+    const image = await LocalStoreImages.shared.getImage(id);
+    console.log("image", image);
+
     setImage(image);
   }, [route]);
 
   const deleteButtonPress = React.useCallback(async () => {
-    await modelsLocal.removeImage(image?.id);
+    await LocalStoreImages.shared.removeImage(image?.pageId);
     goBack();
-  }, [image]);
+  }, [image, goBack]);
 
-  const handlePress = React.useCallback(async (index) => {
-    // this.setState({selected: index});
-    if (index >= 0) {
-      const filter = options[index];
-      const updated = await applyImageFilterOnPage(image, filter);
-      // this.updateCurrentPage(updated);
-      await modelsLocal.updateImage(updated);
-      getImage();
-    }
-  }, []);
+  const handlePress = React.useCallback(
+    async (index) => {
+      console.log(index);
+
+      if (index > 0) {
+        const filter = options[index];
+        const updated = await applyImageFilterOnPage(image, filter);
+        console.log("updated", updated);
+        await LocalStoreImages.shared.updateImage(updated);
+        getImage();
+      }
+    },
+    [getImage, image]
+  );
 
   const filterButtonPress = React.useCallback(async () => {
     const isValidLicens = await checkLicense();
     if (!isValidLicens) {
       return;
     }
-    actionSheetRef.current.show();
+    actionSheetRef.current?.show();
   }, []);
 
   const cropButtonPress = React.useCallback(async () => {
@@ -88,7 +109,7 @@ function FilterImage({ navigation, route }) {
 
     if (result.status === "OK") {
       if (result.page) {
-        await modelsLocal.updateImage(result.page);
+        await LocalStoreImages.shared.updateImage(result.page);
       }
     }
   }, []);
@@ -99,6 +120,7 @@ function FilterImage({ navigation, route }) {
 
   return (
     <View style={styles.container}>
+      <HeaderLinear title="" />
       {image ? (
         <ScrollView>
           <View style={styles.wapperItem}>
@@ -113,7 +135,12 @@ function FilterImage({ navigation, route }) {
         <Loading />
       )}
 
-      <View style={styles.bottomBar}>
+      <LinearGradient
+        style={styles.bottomBar}
+        colors={[primaryColor, secondaryColor2]}
+        start={{ x: 0.0, y: 0.5 }}
+        end={{ x: 1.0, y: 0.5 }}
+      >
         <Text style={styles.bottomBarButton} onPress={cropButtonPress}>
           Crop & Rotate
         </Text>
@@ -126,12 +153,12 @@ function FilterImage({ navigation, route }) {
         >
           Delete
         </Text>
-      </View>
+      </LinearGradient>
       <ActionSheetCustom
         ref={actionSheetRef}
-        title={"Filters"}
+        title="Filters"
         message="Choose an image filter to see how it enhances the document"
-        options={options}
+        options={nameOptions}
         cancelButtonIndex={0}
         onPress={handlePress}
       />
@@ -140,7 +167,12 @@ function FilterImage({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: backgroundColor,
+  },
   wapperItem: {
     paddingTop: 15,
     width: width - 30,

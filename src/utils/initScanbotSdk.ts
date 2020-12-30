@@ -66,8 +66,6 @@ async function checkLicense() {
   try {
     const info = await ScanbotSDK.getLicenseInfo();
 
-    console.log("error: ", info);
-
     if (info.isLicenseValid) {
       return true;
     }
@@ -98,7 +96,6 @@ async function applyImageFilterOnPage(selectedImage, filter) {
   try {
     const updated = await ScanbotSDK.applyImageFilterOnPage(
       selectedImage,
-
       filter
     );
 

@@ -1,11 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Page } from "react-native-scanbot-sdk";
 
 const IMAGES_KEY = "LIST_IMAGE";
-
-interface ImageLocalType {
-  pageId: Number;
-  url: String;
-}
 
 class LocalStoreImages {
   static shared = new LocalStoreImages();
@@ -18,7 +14,7 @@ class LocalStoreImages {
     const listImage = await AsyncStorage.getItem(IMAGES_KEY);
     if (listImage) {
       const formatListImage = JSON.parse(listImage);
-      this.listImage = [...formatListImage] as [ImageLocalType];
+      this.listImage = [...formatListImage] as [Page];
     }
   }
 
@@ -26,9 +22,9 @@ class LocalStoreImages {
     this.init();
   };
 
-  listImage: [ImageLocalType] = [];
+  listImage: Page[] = [];
 
-  addImage = async (images: [ImageLocalType]) => {
+  addImage = async (images: [Page]) => {
     if (images.length > 0) {
       images.forEach((item) => {
         this.listImage.unshift(item);
@@ -37,7 +33,7 @@ class LocalStoreImages {
     }
   };
 
-  removeImage = async (id: Number) => {
+  removeImage = async (id: String) => {
     const images = this.listImage.filter((item) => item.pageId !== id);
     this.listImage = [...images];
     await AsyncStorage.setItem(IMAGES_KEY, JSON.stringify(this.listImage));
@@ -53,7 +49,7 @@ class LocalStoreImages {
     return image;
   };
 
-  updateImage = async (image: ImageLocalType) => {
+  updateImage = async (image: Page) => {
     this.listImage = this.listImage.map((item) => {
       if (item.pageId === image.pageId) {
         return image;

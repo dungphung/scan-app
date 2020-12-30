@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "e58c9cbbddc89dacb4355089e0d5a151.jpg",
+      "filename" : "splash-screen.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "e58c9cbbddc89dacb4355089e0d5a151-1.jpg",
+      "filename" : "splash-screen-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "e58c9cbbddc89dacb4355089e0d5a151-2.jpg",
+      "filename" : "splash-screen-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
