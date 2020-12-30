@@ -35,14 +35,31 @@ const HomeStackScreen = () => {
         options={{
           headerShown: false,
         }}
-        name={PAGE_NAME[HOME_PAGE]}
+        name={HOME_PAGE}
         component={HomeScreen}
       />
       <HomeStack.Screen
         options={{
           headerShown: false,
+          cardStyle: { backgroundColor: "transparent" },
+          cardOverlayEnabled: true,
+          cardStyleInterpolator: ({ current: { progress } }) => ({
+            cardStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 0.5, 0.9, 1],
+                outputRange: [0, 0.25, 0.7, 1],
+              }),
+            },
+            overlayStyle: {
+              opacity: progress.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 0.5],
+                extrapolate: "clamp",
+              }),
+            },
+          }),
         }}
-        name={PAGE_NAME[SCAN_PAGE]}
+        name={SCAN_PAGE}
         component={ScanScreen}
       />
     </HomeStack.Navigator>
@@ -56,14 +73,14 @@ const LibraryStackScreen = () => {
         options={{
           headerShown: false,
         }}
-        name={PAGE_NAME[LIBRARY_PAGE]}
+        name={LIBRARY_PAGE}
         component={LibraryScreen}
       />
       <LibraryStack.Screen
         options={{
           headerShown: false,
         }}
-        name={PAGE_NAME[FILTER_PAGE]}
+        name={FILTER_PAGE}
         component={FilterImage}
       />
     </LibraryStack.Navigator>
@@ -78,7 +95,7 @@ export default function RoutesContainer() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === HOME_PAGE) {
+            if (route.name === HOME_TAB) {
               iconName = focused ? "home" : "home";
             } else {
               iconName = focused ? "appstore-o" : "appstore-o";
@@ -95,10 +112,15 @@ export default function RoutesContainer() {
           },
         }}
       >
-        <Tab.Screen name={PAGE_NAME[HOME_TAB]} component={HomeStackScreen} />
         <Tab.Screen
-          name={PAGE_NAME[LIBRARY_TAB]}
+          name={HOME_TAB}
+          component={HomeStackScreen}
+          options={{ title: PAGE_NAME[HOME_TAB] }}
+        />
+        <Tab.Screen
+          name={LIBRARY_TAB}
           component={LibraryStackScreen}
+          options={{ title: PAGE_NAME[LIBRARY_TAB] }}
         />
       </Tab.Navigator>
     </NavigationContainer>

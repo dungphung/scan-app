@@ -13,11 +13,11 @@ import { blackColor } from "@constants/colors";
 import getIconTypes from "@utils/getIconTypes";
 
 export interface IIconProps {
-  isAnimated?: boolean;
-  type?: string;
-  name?: string;
-  size?: number;
-  color?: string;
+  isAnimated?: Boolean;
+  type?: String;
+  name?: String;
+  size?: Number;
+  color?: String;
   iconStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   onPress?(): void;

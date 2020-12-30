@@ -1,89 +1,85 @@
 import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
-import { Image, StatusBar, StyleSheet, View } from "react-native";
+import React from "react";
+import { StatusBar, StyleSheet, View } from "react-native";
 import SplashScreen from "react-native-splash-screen";
 import { RoutesContainer } from "./routes";
 import AppIntroSlider from "react-native-app-intro-slider";
-import { initScanbotSdk } from "./utils/initScanbotSdk";
-import { Text } from "components";
+
+import { Loading, Text } from "components";
+import { useCheckAppReady } from "@hooks/useCheckAppReady";
+
+import { setIntroAppStatus as setLocalIntroAppStatus } from "@models/localStoreIntroApp";
+import LinearGradient from "react-native-linear-gradient";
+import { primaryColor, secondaryColor2 } from "constants/colors";
 
 SplashScreen.hide();
 
 const slides = [
   {
-    key: "one",
-    title: "Title 1",
-    text: "Description.\nSay something cool",
-
-    backgroundColor: "#59b2ab",
-  },
-  {
     key: "two",
-    title: "Title 2",
-    text: "Other cool stuff",
-
+    title: "Welcome to Scan App",
+    text: "",
     backgroundColor: "#febe29",
   },
   {
     key: "three",
-    title: "Rocket guy",
-    text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
-
+    title: "Easy to use and save your time",
+    text: "",
     backgroundColor: "#22bcb5",
   },
 ];
 
 const App = () => {
-  const [isAppReady, setIsAppReady] = useState(false);
-
-  useEffect(() => {
-    // configureData();
-    return () => {};
-  }, []);
-
-  const configureData = async () => {
-    const result = await initScanbotSdk();
-    console.log("result", result);
-    setIsAppReady(true);
-  };
+  const [isAppReady, introAppStatus, setIntroAppStatus] = useCheckAppReady();
 
   const _renderItem = ({ item }) => {
     return (
       <View style={styles.slide}>
         <Text style={styles.title}>{item.title}</Text>
-
         <Text style={styles.text}>{item.text}</Text>
       </View>
     );
   };
 
-  const _onDone = () => {
-    // User finished the introduction. Show real app through
-    // navigation or simply by controlling state
-    configureData();
+  const _onDone = async () => {
+    await setLocalIntroAppStatus();
+    setIntroAppStatus("1");
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       {!isAppReady && (
+        <LinearGradient
+          style={styles.loadingStyle}
+          colors={[primaryColor, secondaryColor2]}
+        >
+          <Loading />
+        </LinearGradient>
+      )}
+      {isAppReady && !introAppStatus && (
         <AppIntroSlider
           renderItem={_renderItem}
           data={slides}
           onDone={_onDone}
         />
       )}
-      {isAppReady && <RoutesContainer />}
-    </>
+
+      {isAppReady && !!introAppStatus && <RoutesContainer />}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  loadingStyle: { flex: 1, alignItems: "center", justifyContent: "center" },
   slide: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "blue",
+    backgroundColor: "#22bcb5",
   },
   image: {
     width: 320,

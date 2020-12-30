@@ -59,6 +59,15 @@
       "jsx",
       "json",
       "node"
+    ],
+    "setupFiles": [
+      "./node_modules/react-native-gesture-handler/jestSetup.js",
+      "./jestSetupFile.js"
+    ],
+    "transformIgnorePatterns": [
+        "/node_modules/(?!native-base)/"
     ]
   }
+
+
 }

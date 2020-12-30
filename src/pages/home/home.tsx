@@ -1,8 +1,8 @@
 import * as React from "react";
 import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 
-import { PAGE_NAME, SCAN_PAGE } from "@routes/pages";
-import { Divider, Text } from "@components/index";
+import { SCAN_PAGE } from "@routes/pages";
+import { Divider, Text, Icon } from "@components/index";
 import {
   backgroundColor,
   itemBackgroundColor,
@@ -10,43 +10,61 @@ import {
 } from "@constants/colors";
 
 import { DEFAULT_PADDING, WIDTH_SCREEN } from "@constants/layouts";
-import { HeaderLinear } from "layouts";
+import { HeaderLinear } from "@layouts/index";
+import { ProfileScreenNavigationProp } from "@routes/type.routes";
 
-const data = [
-  { id: 1, title: "Scan Document" },
-  { id: 2, title: "Import Image & Detect Document" },
-  { id: 3, title: "View Image Results" },
+type dataType = {
+  id: Number;
+  title: String;
+  iconName: String;
+  iconType: String;
+};
+
+const data: dataType[] = [
+  {
+    id: 1,
+    title: "Scan Document",
+    iconName: "magnify-scan",
+    iconType: "MaterialCommunityIcons",
+  },
 ];
 
 const ITEM_WITDH = (WIDTH_SCREEN - DEFAULT_PADDING * 4) / 2;
 
-const HomeScreen = ({ navigation }) => {
-  const onPressItem = React.useCallback(
-    (item) => {
-      navigation.push(PAGE_NAME[SCAN_PAGE]);
-    },
-    [navigation]
-  );
+interface IProps {
+  navigation: ProfileScreenNavigationProp;
+}
 
-  const renderItem = ({ item }) => {
+const HomeScreen: React.FC<IProps> = ({ navigation }) => {
+  const onPressItem = React.useCallback(() => {
+    navigation.push(SCAN_PAGE);
+  }, [navigation]);
+
+  const renderItem = React.useCallback(({ item }: { item: dataType }) => {
     return (
       <View style={styles.section}>
         <View style={styles.sectionItemContainer}>
-          <TouchableOpacity onPress={() => onPressItem(item)}>
+          <TouchableOpacity onPress={onPressItem}>
+            <Icon
+              name={item.iconName}
+              type={item.iconType}
+              size={40}
+              color={whiteColor}
+            />
             <Text style={styles.sectionItem}>{item.title}</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
-  };
+  }, []);
 
-  const ItemSeparatorComponent = () => {
+  const ItemSeparatorComponent = React.useCallback(() => {
     return <Divider containerStyle={{ paddingVertical: DEFAULT_PADDING }} />;
-  };
+  }, []);
 
-  const keyExtractor = (item) => {
-    return item.id;
-  };
+  const keyExtractor = React.useCallback((item: dataType) => {
+    return `${item.id}`;
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -71,14 +89,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionItem: {
-    fontSize: 14,
+    fontSize: 15,
     textAlign: "center",
     color: whiteColor,
     fontWeight: "bold",
+    marginTop: 8,
   },
   section: {
     width: ITEM_WITDH,
-    height: (ITEM_WITDH * 1) / 2,
+    height: ITEM_WITDH * 0.7,
     marginHorizontal: DEFAULT_PADDING,
     borderRadius: 20,
   },

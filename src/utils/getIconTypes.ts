@@ -7,8 +7,9 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Octicons from "react-native-vector-icons/Octicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-export default (type?: string): React.ElementType => {
+export default (type?: String): React.ElementType => {
   switch (type) {
     case "zocial":
       return ZocialIcon;

@@ -3,11 +3,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const IMAGES_KEY = "LIST_IMAGE";
 
 interface ImageLocalType {
-  id: String;
+  pageId: Number;
   url: String;
 }
 
 class LocalStoreImages {
+  static shared = new LocalStoreImages();
+
   constructor() {
     this.init();
   }
@@ -35,8 +37,8 @@ class LocalStoreImages {
     }
   };
 
-  removeImage = async (id) => {
-    const images = this.listImage.filter((item) => item.id !== id);
+  removeImage = async (id: Number) => {
+    const images = this.listImage.filter((item) => item.pageId !== id);
     this.listImage = [...images];
     await AsyncStorage.setItem(IMAGES_KEY, JSON.stringify(this.listImage));
   };
@@ -51,7 +53,7 @@ class LocalStoreImages {
     return image;
   };
 
-  updateImage = async (image) => {
+  updateImage = async (image: ImageLocalType) => {
     this.listImage = this.listImage.map((item) => {
       if (item.pageId === image.pageId) {
         return image;

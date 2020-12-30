@@ -22,19 +22,19 @@ const { width, height } = Dimensions.get("window");
 const CANCEL_INDEX = 0;
 
 const options = [
-  "NONE",
-  "COLOR_ENHANCED",
-  "GRAYSCALE",
-  "BINARIZED",
-  "COLOR_DOCUMENT",
-  "PURE_BINARIZED",
-  "BACKGROUND_CLEAN",
-  "BLACK_AND_WHITE",
-  "OTSU_BINARIZATION",
-  "DEEP_BINARIZATION",
-  "LOW_LIGHT_BINARIZATION",
-  "EDGE_HIGHLIGHT",
-  "LOW_LIGHT_BINARIZATION_2",
+  "None",
+  "Color enhanced",
+  "Grayscale",
+  "Binarized",
+  "Color document",
+  "Pure Binarized",
+  "Background clean",
+  "Black and white",
+  "Otsu Binarization",
+  "Deep binarization",
+  "Low light binarization",
+  "Edge highlight",
+  "Low light binarization 2",
 ];
 
 const modelsLocal = new LocalStoreImages();
@@ -115,16 +115,16 @@ function FilterImage({ navigation, route }) {
 
       <View style={styles.bottomBar}>
         <Text style={styles.bottomBarButton} onPress={cropButtonPress}>
-          CROP & ROTATE
+          Crop & Rotate
         </Text>
         <Text style={styles.bottomBarButton} onPress={filterButtonPress}>
-          FILTER
+          Filter
         </Text>
         <Text
           style={[styles.bottomBarButton, styles.alignRight]}
           onPress={deleteButtonPress}
         >
-          DELETE
+          Delete
         </Text>
       </View>
       <ActionSheetCustom

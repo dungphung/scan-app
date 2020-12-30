@@ -1,3 +1,8 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import {
+  CompositeNavigationProp,
+  NavigatorScreenParams,
+} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import {
   HOME_PAGE,
@@ -20,4 +25,9 @@ export type RootStackParamList = {
 export type ScanScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   typeof SCAN_PAGE
+>;
+
+export type ProfileScreenNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<BottomTabParamList>,
+  StackNavigationProp<RootStackParamList>
 >;
