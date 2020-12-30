@@ -17,10 +17,9 @@ import {
   secondaryColor2,
 } from "constants/colors";
 import LinearGradient from "react-native-linear-gradient";
+import { LoadingModal } from "@layouts/index";
 
 const { width } = Dimensions.get("window");
-
-const CANCEL_INDEX = 0;
 
 const nameOptions = [
   "None",
@@ -55,7 +54,8 @@ const options = [
 ];
 
 function FilterImage({ navigation, route }) {
-  const [image, setImage] = React.useState<Page>(null);
+  const [image, setImage] = React.useState<Page | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const actionSheetRef = React.useRef(null);
 
@@ -78,15 +78,16 @@ function FilterImage({ navigation, route }) {
 
   const handlePress = React.useCallback(
     async (index) => {
-      console.log(index);
-
+      setIsLoading(true);
       if (index > 0) {
         const filter = options[index];
         const updated = await applyImageFilterOnPage(image, filter);
-        console.log("updated", updated);
+
         await LocalStoreImages.shared.updateImage(updated);
         getImage();
       }
+
+      setIsLoading(false);
     },
     [getImage, image]
   );
@@ -162,6 +163,7 @@ function FilterImage({ navigation, route }) {
         cancelButtonIndex={0}
         onPress={handlePress}
       />
+      <LoadingModal loading={isLoading} />
     </View>
   );
 }
