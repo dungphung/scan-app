@@ -11,7 +11,7 @@ import { Divider } from "@components/index";
 
 import { LocalStoreImages } from "../../models";
 import { FILTER_PAGE } from "routes/pages";
-import { useFocusEffect } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 import { HeaderLinear } from "layouts";
 import { backgroundColor, whiteColor } from "constants/colors";
 import { DEFAULT_PADDING } from "constants/layouts";
@@ -19,16 +19,17 @@ import { Page } from "react-native-scanbot-sdk";
 
 function LibraryScreen({ navigation }) {
   const [images, setImages] = React.useState<Page[]>([]);
+  const isFocused = useIsFocused();
 
-  const getImage = React.useCallback(() => {
+  const getImage = () => {
     const listImage = LocalStoreImages.shared.getListImage();
 
     setImages(listImage);
-  }, []);
+  };
 
-  useFocusEffect(() => {
+  React.useEffect(() => {
     getImage();
-  });
+  }, [isFocused]);
 
   const onPressItem = React.useCallback(
     (item) => {
@@ -40,24 +41,21 @@ function LibraryScreen({ navigation }) {
     [navigation]
   );
 
-  const renderItem = React.useCallback(
-    ({ item }) => {
-      return (
-        <View style={styles.buttonStyle}>
-          <TouchableOpacity onPress={() => onPressItem(item)}>
-            <View style={styles.wapperItem}>
-              <Image
-                style={styles.image}
-                resizeMode="contain"
-                source={{ uri: item.documentImageFileUri }}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-      );
-    },
-    [onPressItem]
-  );
+  const renderItem = ({ item }: { item: Page }) => {
+    return (
+      <View style={styles.buttonStyle}>
+        <TouchableOpacity onPress={() => onPressItem(item)}>
+          <View style={styles.wapperItem}>
+            <Image
+              style={styles.image}
+              resizeMode="contain"
+              source={{ uri: item.documentImageFileUri }}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const ItemSeparatorComponent = React.useCallback(() => {
     return <Divider containerStyle={styles.dividerStyle} />;
