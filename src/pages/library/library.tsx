@@ -10,7 +10,7 @@ import {
 import { Divider } from "@components/index";
 
 import { LocalStoreImages } from "../../models";
-import { FILTER_PAGE, PAGE_NAME } from "routes/pages";
+import { FILTER_PAGE } from "routes/pages";
 import { useFocusEffect } from "@react-navigation/native";
 import { HeaderLinear } from "layouts";
 import { backgroundColor, whiteColor } from "constants/colors";
@@ -20,13 +20,14 @@ import { Page } from "react-native-scanbot-sdk";
 function LibraryScreen({ navigation }) {
   const [images, setImages] = React.useState<Page[]>([]);
 
-  React.useEffect(() => {
-    getImage();
+  const getImage = React.useCallback(async () => {
+    const listImage = LocalStoreImages.shared.getListImage();
+    console.log(listImage.length);
+    setImages(listImage);
   }, []);
 
   useFocusEffect(() => {
-    const listImage = LocalStoreImages.shared.getListImage();
-    setImages(listImage);
+    getImage();
   });
 
   const onPressItem = React.useCallback(
@@ -38,11 +39,6 @@ function LibraryScreen({ navigation }) {
     },
     [navigation]
   );
-
-  const getImage = React.useCallback(async () => {
-    const listImage = LocalStoreImages.shared.getListImage();
-    setImages(listImage);
-  }, []);
 
   const renderItem = React.useCallback(
     ({ item }) => {
@@ -61,9 +57,13 @@ function LibraryScreen({ navigation }) {
     [onPressItem]
   );
 
-  const keyExtractor = React.useCallback((item) => {
-    return item.pageId;
-  }, []);
+  const keyExtractor = React.useCallback(
+    (item) => {
+      return item.pageId;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [images]
+  );
 
   const ItemSeparatorComponent = React.useCallback(() => {
     return <Divider containerStyle={styles.dividerStyle} />;
@@ -74,6 +74,7 @@ function LibraryScreen({ navigation }) {
       <HeaderLinear title="Library" titleStyle={styles.titleStyle} />
       <FlatList
         numColumns={2}
+        extraData={images}
         contentContainerStyle={styles.contentStyle}
         data={images}
         renderItem={renderItem}

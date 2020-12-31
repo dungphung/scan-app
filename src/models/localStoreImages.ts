@@ -33,7 +33,7 @@ class LocalStoreImages {
     }
   };
 
-  removeImage = async (id: String) => {
+  removeImage = async (id: string) => {
     const images = this.listImage.filter((item) => item.pageId !== id);
     this.listImage = [...images];
     await AsyncStorage.setItem(IMAGES_KEY, JSON.stringify(this.listImage));

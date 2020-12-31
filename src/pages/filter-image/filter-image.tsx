@@ -57,7 +57,7 @@ function FilterImage({ navigation, route }) {
   const [image, setImage] = React.useState<Page | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const actionSheetRef = React.useRef(null);
+  const actionSheetRef = React.useRef<ActionSheetCustom>(null);
 
   React.useEffect(() => {
     getImage();
@@ -65,15 +65,17 @@ function FilterImage({ navigation, route }) {
 
   const getImage = React.useCallback(async () => {
     const id = route.params.id;
-    const image = await LocalStoreImages.shared.getImage(id);
-    console.log("image", image);
-
-    setImage(image);
+    const img = await LocalStoreImages.shared.getImage(id);
+    if (img) {
+      setImage(img);
+    }
   }, [route]);
 
   const deleteButtonPress = React.useCallback(async () => {
-    await LocalStoreImages.shared.removeImage(image?.pageId);
-    goBack();
+    if (image?.pageId) {
+      await LocalStoreImages.shared.removeImage(image.pageId);
+      goBack();
+    }
   }, [image, goBack]);
 
   const handlePress = React.useCallback(
@@ -82,9 +84,10 @@ function FilterImage({ navigation, route }) {
       if (index > 0) {
         const filter = options[index];
         const updated = await applyImageFilterOnPage(image, filter);
-
-        await LocalStoreImages.shared.updateImage(updated);
-        getImage();
+        if (updated) {
+          await LocalStoreImages.shared.updateImage(updated);
+          getImage();
+        }
       }
 
       setIsLoading(false);
