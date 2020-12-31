@@ -20,9 +20,9 @@ import { Page } from "react-native-scanbot-sdk";
 function LibraryScreen({ navigation }) {
   const [images, setImages] = React.useState<Page[]>([]);
 
-  const getImage = React.useCallback(async () => {
+  const getImage = React.useCallback(() => {
     const listImage = LocalStoreImages.shared.getListImage();
-    console.log(listImage.length);
+
     setImages(listImage);
   }, []);
 
@@ -43,26 +43,20 @@ function LibraryScreen({ navigation }) {
   const renderItem = React.useCallback(
     ({ item }) => {
       return (
-        <TouchableOpacity onPress={() => onPressItem(item)}>
-          <View style={styles.wapperItem}>
-            <Image
-              style={styles.image}
-              resizeMode="contain"
-              source={{ uri: item.documentImageFileUri }}
-            />
-          </View>
-        </TouchableOpacity>
+        <View style={styles.buttonStyle}>
+          <TouchableOpacity onPress={() => onPressItem(item)}>
+            <View style={styles.wapperItem}>
+              <Image
+                style={styles.image}
+                resizeMode="contain"
+                source={{ uri: item.documentImageFileUri }}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
       );
     },
     [onPressItem]
-  );
-
-  const keyExtractor = React.useCallback(
-    (item) => {
-      return item.pageId;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [images]
   );
 
   const ItemSeparatorComponent = React.useCallback(() => {
@@ -78,7 +72,9 @@ function LibraryScreen({ navigation }) {
         contentContainerStyle={styles.contentStyle}
         data={images}
         renderItem={renderItem}
-        keyExtractor={keyExtractor}
+        keyExtractor={(item) => {
+          return item.pageId;
+        }}
         ItemSeparatorComponent={ItemSeparatorComponent}
       />
     </View>
@@ -88,8 +84,13 @@ function LibraryScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: backgroundColor },
   wapperItem: {
-    width: 200,
+    width: 150,
     height: 200,
+  },
+  buttonStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   image: {
     flex: 1,

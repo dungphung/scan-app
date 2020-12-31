@@ -13,7 +13,7 @@ const ScanScreen = ({ navigation }) => {
     const isPermission = await checkLicense();
     if (isPermission) {
       const result = await startDocumentScan();
-      if (result) {
+      if (result?.status === "OK") {
         await LocalStoreImages.shared.addImage(result?.pages);
       }
 
